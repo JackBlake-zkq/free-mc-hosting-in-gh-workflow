@@ -2,6 +2,7 @@ import { spawn } from 'child_process';
 import { writeS3, readS3 } from './s3.mjs';
 import { mkdirSync } from 'fs';
 
+
 const { BACKUP_FREQUENCY, START_COMMAND } = process.env;
 
 const command = START_COMMAND.split(" ")
@@ -16,11 +17,11 @@ try {
   mkdirSync("./server", {});
   process.chdir("./server");
 }
- 
 
 await readS3();
 
 const server_proc = spawn(command[0], command.slice(1));
+
 process.on("beforeExit", async () => {
   if(server_proc.exitCode == null) server_proc.kill();
 });
@@ -44,7 +45,11 @@ server_proc.stderr.on('data', data => {
 
 server_proc.on('close', async code => {
   console.log(`server exited with code ${code}`);
-  await writeS3();
+  
+  if(code == 0) {
+    //must have saved to disk already, can write backup
+    await writeS3();
+  }
   process.exit(server_proc.exitCode);
 });
 
