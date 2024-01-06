@@ -24,30 +24,24 @@ export const writeS3 = async () => {
         Key: "backup.zip",
         Body: fs.createReadStream("../backup.zip")
     });
-    
-    try {
-        await client.send(command);
-        console.log("Write to S3 Successful");
-    } catch (err) {
-        console.error(err);
-    }
+
+    await client.send(command);
+    console.log("Write to S3 Successful");
 }
 
 /**
  * read the zip from the AWS S3 bucket specified by S3_BUCKET_NAME and extract to working directory
  */
 export const readS3 = async () => {
-    console.log("Reading from S3 and extracting");
     const command = new GetObjectCommand({
         Bucket: S3_BUCKET_NAME,
         Key: "backup.zip",
-      });
-    try {
-        const response = await client.send(command);
-        await pipeline(response.Body, Extract({ path: '.' }));
-        console.log("Read/Extraction Successful")
-    } catch (err) {
-        console.error(err);
-        process.exit(1);
-    }
+     });
+    console.log("Reading from S3 and extracting");
+    const response = await client.send(command);
+    await pipeline(response.Body, Extract({ path: '.' }));
+    console.log("Read/Extraction Successful");
+     // if(fs.readdirSync(".").some(ename => fs.statSync(ename).mtime > response.LastModified)) {
+    //     response.Body.destroy();
+    //     console.log("Local files newer than S3 backup, skipping read");
 }

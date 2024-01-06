@@ -22,10 +22,6 @@ await readS3();
 
 const server_proc = spawn(command[0], command.slice(1));
 
-process.on("beforeExit", async () => {
-  if(server_proc.exitCode == null) server_proc.kill();
-});
-
 process.stdin.pipe(server_proc.stdin);
 
 server_proc.stdout.on('data', data => {
