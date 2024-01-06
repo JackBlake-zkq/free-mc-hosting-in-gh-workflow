@@ -4,9 +4,7 @@
   "description": "",
   "main": "server_wrapper.mjs",
   "scripts": {
-    "start": "node -r dotenv/config server_wrapper.mjs",
-    "pull": "node -r dotenv/config pull.js",
-    "push": "node -r dotenv/config push.js"
+    "start": "node -r dotenv/config server_wrapper.mjs"
   },
   "repository": {
     "type": "git",
