@@ -1,12 +1,14 @@
-import { spawn } from 'node:child_process';
-import { writeS3, readS3 } from './s3.js';
+import { spawn } from 'child_process';
+import { writeS3, readS3 } from './s3.mjs';
 import { mkdirSync } from 'fs';
 
-const { USE_BACKUP, DO_BACKUP, BACKUP_FREQUENCY, START_COMMAND } = process.env;
+const { BACKUP_FREQUENCY, START_COMMAND } = process.env;
 
 const command = START_COMMAND.split(" ")
 
 let finishDiskSave = () => {};
+
+let starting = true;
 
 try { 
   process.chdir("./server") 
@@ -16,7 +18,7 @@ try {
 }
  
 
-if(USE_BACKUP) await readS3();
+await readS3();
 
 const server_proc = spawn(command[0], command.slice(1));
 process.on("beforeExit", async () => {
@@ -28,10 +30,10 @@ process.stdin.pipe(server_proc.stdin);
 server_proc.stdout.on('data', data => {
   let str = data.toString();
   console.log(str);
-  if (str.includes("Done")) {
-    if(DO_BACKUP) setInterval(writeBackup, parseInt(BACKUP_FREQUENCY));
-  }
-  if (str.includes("Saved the game")) {
+  if (str.includes("Done") && starting) {
+    starting = false;
+    setInterval(writeBackup, parseInt(BACKUP_FREQUENCY));
+  } else if (str.includes("Saved the game")) {
     finishDiskSave();
   }
 });
@@ -42,7 +44,7 @@ server_proc.stderr.on('data', data => {
 
 server_proc.on('close', async code => {
   console.log(`server exited with code ${code}`);
-  if(DO_BACKUP) await writeS3();
+  await writeS3();
   process.exit(server_proc.exitCode);
 });
 

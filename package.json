@@ -1,35 +1,22 @@
 {
-  "name": "free-mc-server-hosting",
+  "name": "mc-server",
   "version": "1.0.0",
   "description": "",
-  "main": "start.js",
-  "type": "module",
-  "scripts": {
-    "dev": "node -r dotenv/config server_wrapper.js",
-    "start": "NODE_ENV=production node server_wrapper.js"
-  },
+  "main": "server_wrapper.mjs",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JackBlake-zkq/free-mc-server-hosting.git"
+    "url": "git+https://github.com/JackBlake-zkq/mc-server.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/JackBlake-zkq/free-mc-server-hosting/issues"
+    "url": "https://github.com/JackBlake-zkq/mc-server/issues"
   },
-  "homepage": "https://github.com/JackBlake-zkq/free-mc-server-hosting#readme",
-  "devDependencies": {
-    "dotenv": "^16.3.1"
-  },
+  "homepage": "https://github.com/JackBlake-zkq/mc-server#readme",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.485.0",
-    "@aws-sdk/lib-storage": "^3.485.0",
-    "mime-types": "^2.1.35",
     "unzip-stream": "^0.3.1",
     "zip-a-folder": "^3.1.5"
-  },
-  "overrides": {
-    "graceful-fs": "^4.2.11"
   }
 }
