@@ -12,6 +12,7 @@ Extra-simple setup to run Minecraft Server on AWS EC2 with backups to S3. It use
     - Need to install node, jre (at least java 17 for mc 1.20.4), git, and screen (if not already installed)
     - I'm using Amazon Linux 2023 t3-medium, so example install is: `sudo yum install -y nodejs java-17-amazon-corretto-headless git`
     - Clone this repo (I recommend via https from EC2)
+    - in repo, install dependencies with `npm ci`
 
 Might setup some CloudFormation for these
 
