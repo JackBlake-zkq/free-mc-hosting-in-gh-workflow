@@ -1,6 +1,6 @@
 # MC Server
 
-Extra-simple setup to run Minecraft Server on AWS EC2 with backups to S3. It uses a Node.js script which runs the server as a subprocess.
+Extra-simple setup to run Minecraft Server on AWS EC2 with backups to S3. It uses a Node.js script which runs the server as a subprocess. Should work with all minecraft server versions and probably even 3rd party servers like Fabric.
 
 ## AWS Resources
 
