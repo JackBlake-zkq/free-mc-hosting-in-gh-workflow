@@ -9,8 +9,9 @@ Extra-simple setup to run Minecraft Server on AWS EC2 with backups to S3. It use
 - IAM Policy - only allow `GetObject` and `PutObject`, and only to S3 Bucket for this project
 - IAM Role with policy
 - EC2 Instance with Security Group and IAM Policy attached, as much RAM as your willing to pay for
-    - Need to install node, jre (at least java 17 for mc 1.20.4), and screen (if not already installed)
-    - I'm using Amazon Linux 3 t3-medium, so example install is: `sudo yum install -y nodejs java-17-amazon-corretto-headless`
+    - Need to install node, jre (at least java 17 for mc 1.20.4), git, and screen (if not already installed)
+    - I'm using Amazon Linux 2023 t3-medium, so example install is: `sudo yum install -y nodejs java-17-amazon-corretto-headless git`
+    - Clone this repo (I recommend via https from EC2)
 
 Might setup some CloudFormation for these
 
@@ -34,7 +35,7 @@ S3_REGION=us-east-2
 
 ### Locally
 
-As long as you have your AWS credentials, just run `npm run start`!
+After cloning the repo, as long as you have your AWS credentials, just run `npm run start`!
 
 ### In EC2
 
