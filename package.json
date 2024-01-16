@@ -4,22 +4,13 @@
   "description": "",
   "main": "server_wrapper.mjs",
   "scripts": {
-    "start": "node -r dotenv/config server_wrapper.mjs"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JackBlake-zkq/mc-server.git"
+    "start": "node server_wrapper.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/JackBlake-zkq/mc-server/issues"
-  },
-  "homepage": "https://github.com/JackBlake-zkq/mc-server#readme",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.485.0",
-    "dotenv": "^16.3.1",
     "unzip-stream": "^0.3.1",
     "zip-a-folder": "^3.1.5"
   }

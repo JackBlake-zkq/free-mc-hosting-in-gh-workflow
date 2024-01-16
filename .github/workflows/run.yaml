@@ -1,0 +1,23 @@
+on: [workflow_dispatch]
+
+jobs:
+    run-server:
+        name: run mc serv and open ngrok tunnel
+        runs-on: ubuntu-latest
+        steps:
+          - run: mkdir /.aws && echo {{ secrets.AWS_CREDS }} >> /.aws/credentials
+          - run: |
+              docker run -it --name mcserv --rm \
+                -p 25565:25565 \
+                -e START_COMMAND="${{ vars.START_COMMAND }}" \
+                -e S3_BUCKET_NAME=${{ vars.S3_BUCKET_NAME }} \
+                -e S3_REGION=${{ vars.S3_REGION }} \
+                -e BACKUP_FREQUENCY=${{ vars.BACKUP_FREQUENCY }} \
+                -v /.aws/credentials:/root/.aws:ro \
+                ${{ github.event.act && 'localhost:8080' || 'ghcr.io' }}/jackblake-zkq/wrapped-mc:latest
+          # - uses: luisboto/ngrok-tunnel-action@v0.1.7.2
+          #   with:
+          #     timeout: 6h
+          #     port: 25565
+          #     ngrok_authtoken: ${{ secrets.NGROK_AUTHTOKEN }}
+          #     tunnel_type: tcp

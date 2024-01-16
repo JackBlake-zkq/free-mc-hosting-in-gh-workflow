@@ -41,7 +41,4 @@ export const readS3 = async () => {
     const response = await client.send(command);
     await pipeline(response.Body, Extract({ path: '.' }));
     console.log("Read/Extraction Successful");
-     // if(fs.readdirSync(".").some(ename => fs.statSync(ename).mtime > response.LastModified)) {
-    //     response.Body.destroy();
-    //     console.log("Local files newer than S3 backup, skipping read");
 }

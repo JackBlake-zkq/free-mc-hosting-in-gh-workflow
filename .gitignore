@@ -1,5 +1,8 @@
 /server
-.env
+**/*.env
 /node_modules
 *.zip
-.DS_Store
+**/.DS_Store
+**/*.log
+**/*.secrets
+**/*.variables
