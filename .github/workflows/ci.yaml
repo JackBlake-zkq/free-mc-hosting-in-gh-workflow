@@ -8,7 +8,7 @@ on:
 name: Build Server Wrapper
 
 env:
-    IMAGE_NAME: ${{ github.event.act && 'localhost:8080' || 'ghcr.io' }}/${{ vars.IMAGE_NAMESPACE }}/wrapped-mc:latest
+    IMAGE_NAME: ${{ github.event.act && 'localhost:8080' || 'ghcr.io' }}/${{ vars.IMAGE_REPO }}:latest
 
 jobs:
     build-and-push:

@@ -16,7 +16,7 @@ jobs:
                 -e BACKUP_FREQUENCY=${{ vars.BACKUP_FREQUENCY }} \
                 -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
                 -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
-                ${{ github.event.act && 'localhost:8080' || 'ghcr.io' }}/${{ vars.IMAGE_NAMESPACE }}/wrapped-mc:latest
+                ${{ github.event.act && 'localhost:8080' || 'ghcr.io' }}/${{ vars.IMAGE_REPO }}:latest
           - name: install and configure ngrok
             run: |
               wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-${{ vars.ARCHITECTURE || 'amd64' }}.tgz
