@@ -20,7 +20,7 @@ jobs:
             run: |
               wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-${{ vars.ARCHITECTURE || 'amd64' }}.tgz
               tar -xvf ngrok-v3-stable-linux-${{ vars.ARCHITECTURE || 'amd64' }}.tgz
-              ls
+
           # - name: setup ssh server
           #   run: |
           #     echo "${{ secrets.PUBLIC_KEY }}" >> ~/.ssh/authorized_keys
@@ -28,4 +28,6 @@ jobs:
           #     service ssh restart
           - uses: actions/checkout@v2
           - name: open ngrok tunnel
-            run: ./ngrok start --all --config ngrok-config.yaml --authtoken ${{ secrets.NGROK_AUTHTOKEN }}
+            run: |
+              ls
+              ./ngrok start --all --config ngrok-config.yaml --authtoken ${{ secrets.NGROK_AUTHTOKEN }}
