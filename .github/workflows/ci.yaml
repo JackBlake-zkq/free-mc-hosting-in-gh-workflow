@@ -2,11 +2,13 @@ on:
     push:
       branches:
         - main
+      paths:
+        - "server-wrapper/**"
 
-name: CI
+name: Build Server Wrapper
 
 env:
-    IMAGE_NAME: ${{ github.event.act && 'localhost:8080' || 'ghcr.io' }}/jackblake-zkq/wrapped-mc:latest
+    IMAGE_NAME: ${{ github.event.act && 'localhost:8080' || 'ghcr.io' }}/${{ vars.IMAGE_NAMESPACE }}/wrapped-mc:latest
 
 jobs:
     build-and-push:
@@ -20,5 +22,5 @@ jobs:
             username: ${{ github.actor }}
             password: ${{ secrets.GITHUB_TOKEN }}
     
-        - run: docker build -t $IMAGE_NAME .
+        - run: docker build -t $IMAGE_NAME ./server-wrapper
         - run: docker push $IMAGE_NAME

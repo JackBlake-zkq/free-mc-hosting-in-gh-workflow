@@ -4,20 +4,27 @@ jobs:
     run-server:
         name: run mc serv and open ngrok tunnel
         runs-on: ubuntu-latest
+        if: ${{ always() }}
         steps:
-          - run: mkdir /.aws && echo {{ secrets.AWS_CREDS }} >> /.aws/credentials
-          - run: |
-              docker run -it --name mcserv --rm \
+          - name: open ngrok tunnel
+            run: |
+              wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-${{ vars.ARCHITECTURE || 'amd64' }}.tgz
+              tar -xvf ngrok-v3-stable-linux-${{ vars.ARCHITECTURE || 'amd64' }}.tgz
+              ./ngrok tcp 25565 --authtoken ${{ secrets.NGROK_AUTHTOKEN }} --log stdout > ngrok.log &
+              sleep 3
+              echo -e "\n\n\nIP ADDRESS:"
+              curl -s http://localhost:4040/api/tunnels | jq '.tunnels | .[0] | .public_url | .[6:]'
+              echo -e "\n\n\n"
+          - name: start mc server container
+            run: |
+              docker run -itd --name mcserv --rm \
                 -p 25565:25565 \
                 -e START_COMMAND="${{ vars.START_COMMAND }}" \
                 -e S3_BUCKET_NAME=${{ vars.S3_BUCKET_NAME }} \
                 -e S3_REGION=${{ vars.S3_REGION }} \
                 -e BACKUP_FREQUENCY=${{ vars.BACKUP_FREQUENCY }} \
-                -v /.aws/credentials:/root/.aws:ro \
-                ${{ github.event.act && 'localhost:8080' || 'ghcr.io' }}/jackblake-zkq/wrapped-mc:latest
-          # - uses: luisboto/ngrok-tunnel-action@v0.1.7.2
-          #   with:
-          #     timeout: 6h
-          #     port: 25565
-          #     ngrok_authtoken: ${{ secrets.NGROK_AUTHTOKEN }}
-          #     tunnel_type: tcp
+                -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+                -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+                ${{ github.event.act && 'localhost:8080' || 'ghcr.io' }}/${{ vars.IMAGE_NAMESPACE }}/wrapped-mc:latest
+          - if: ${{ always() }}
+            run: docker wait mcserv

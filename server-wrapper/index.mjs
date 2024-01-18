@@ -50,7 +50,8 @@ server_proc.on('close', async code => {
 });
 
 async function writeBackup() {
-  console.log("Starting Backup");
+  server_proc.stdin.write('/say Starting Backup\n');
+  console.log("Starting Disk Write")
   // save to disk
   await new Promise((resolve, reject) => {
     let timeout;
@@ -62,8 +63,9 @@ async function writeBackup() {
     server_proc.stdin.write('/save-all\n');
     timeout = setTimeout(reject, 10000);
   })
+  console.log("Disk Write Complete")
 
   await writeS3();
 
-  console.log("Backup Complete");
+  server_proc.stdin.write('/say Backup Complete\n');
 }

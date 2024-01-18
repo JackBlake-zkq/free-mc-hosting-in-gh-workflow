@@ -6,7 +6,7 @@ import { pipeline } from "stream/promises";
 
 const { S3_BUCKET_NAME, S3_REGION } = process.env;
 
-const client = new S3Client({region: S3_REGION});
+const client = new S3Client();
 
 /**
  * zip all files in working directory and upload to S3 bucket specified by S3_BUCKET_NAME
