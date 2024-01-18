@@ -16,15 +16,19 @@ jobs:
                 -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
                 -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
                 ${{ github.event.act && 'localhost:8080' || 'ghcr.io' }}/${{ vars.IMAGE_REPO }}:latest
-          - name: install ngrok
+          - name: install ngrok and screen
             run: |
               wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-${{ vars.ARCHITECTURE || 'amd64' }}.tgz
               tar -xvf ngrok-v3-stable-linux-${{ vars.ARCHITECTURE || 'amd64' }}.tgz
+              sudo apt-get update
+              sudo apt-get install -y screen
+          - name: open ngrok tunnel in screen (SERVER IP HERE)
+            run: |
+              screen -d -m ./ngrok tcp 25565 --authtoken ${{ secrets.NGROK_AUTHTOKEN }} --log stdout
+              sleep 5
+              curl -s http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels | .[0] | .public_url | .[6:]' 
           - name: wait until server finishes starting
             run: timeout 5m grep -m 1 "Done" <(docker logs -f mc)
-          - name: open ngrok tunnel
-            run: |
-              grep -m 1 "started tunnel" <(./ngrok tcp 25565 --authtoken ${{ secrets.NGROK_AUTHTOKEN }} --log stdout)
           - name: wait for server to be stopped
             run: docker wait mc
           - if: ${{ cancelled() }}
