@@ -5,6 +5,7 @@ jobs:
         name: run mc serv and open ngrok tunnel
         runs-on: ubuntu-20.04
         steps:
+          - uses: actions/checkout@v2
           - name: start mc server container
             run: |
               docker run -itd --name mc --rm \
@@ -26,7 +27,6 @@ jobs:
           #     echo "${{ secrets.PUBLIC_KEY }}" >> ~/.ssh/authorized_keys
           #     sudo chmod -R go= ~/.ssh
           #     service ssh restart
-          - uses: actions/checkout@v2
           - name: open ngrok tunnel
             run: |
               ls
