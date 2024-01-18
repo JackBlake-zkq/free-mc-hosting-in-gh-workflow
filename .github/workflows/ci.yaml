@@ -4,6 +4,7 @@ on:
         - main
       paths:
         - "server-wrapper/**"
+        - ".github/workflows/ci.yaml"
 
 name: Build Server Wrapper
 
