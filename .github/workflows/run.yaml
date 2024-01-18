@@ -5,10 +5,9 @@ jobs:
         name: run mc serv and open ngrok tunnel
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v2
           - name: start mc server container
             run: |
-              docker run -itd --name mc --rm \
+              docker run -id --name mc --rm \
                 -p 25565:25565 \
                 -e START_COMMAND="${{ vars.START_COMMAND }}" \
                 -e S3_BUCKET_NAME=${{ vars.S3_BUCKET_NAME }} \
@@ -21,7 +20,12 @@ jobs:
             run: |
               wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-${{ vars.ARCHITECTURE || 'amd64' }}.tgz
               tar -xvf ngrok-v3-stable-linux-${{ vars.ARCHITECTURE || 'amd64' }}.tgz
-          - name: open ngrok tunnel and follow mc logs
+          - name: wait until server finishes starting
+            run: timeout 5m grep -m 1 "Done" <(docker logs -f mc)
+          - name: open ngrok tunnel
             run: |
-              docker logs -f mc &
-              ./ngrok start --all --config ngrok-config.yaml --authtoken ${{ secrets.NGROK_AUTHTOKEN }}
+              grep -m 1 "started tunnel" <(./ngrok tcp 25565 --authtoken ${{ secrets.NGROK_AUTHTOKEN }} --log stdout)
+          - name: wait for server to be stopped
+            run: docker wait mc
+          - if: ${{ cancelled() }}
+            run: echo "/stop" | docker attach mc
