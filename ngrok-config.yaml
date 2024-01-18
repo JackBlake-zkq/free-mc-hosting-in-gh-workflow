@@ -1,7 +1,4 @@
 tunnels:
-  # ssh:
-  #   proto: tcp
-  #   addr: 22
   mc:
     proto: tcp
     addr: 25565
