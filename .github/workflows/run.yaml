@@ -1,4 +1,8 @@
-on: [workflow_dispatch]
+on:
+    workflow_dispatch:
+    schedule:
+        - cron:  '0 9 * * 6'
+    
 
 jobs:
     run-server:
@@ -29,6 +33,9 @@ jobs:
               curl -s http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels | .[0] | .public_url | .[6:]' 
           - name: wait until server finishes starting
             run: timeout 5m grep -m 1 "Done" <(docker logs -f mc)
+          - name: stop server after 3h if running on schedule
+            if: ${{ github.event_name == 'schedule' }}
+            run: (sleep 3h (echo "/stop" | docker attach mc)) &
           - name: wait for server to be stopped
             run: docker wait mc
           - if: ${{ cancelled() }}
