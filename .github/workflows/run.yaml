@@ -35,7 +35,7 @@ jobs:
             run: timeout 5m grep -m 1 "Done" <(docker logs -f mc)
           - name: stop server after 3h if running on schedule
             if: ${{ github.event_name == 'schedule' }}
-            run: (sleep 3h (echo "/stop" | docker attach mc)) &
+            run: (sleep 10800 && (echo "/stop" | docker attach mc)) &
           - name: wait for server to be stopped
             run: docker wait mc
           - if: ${{ cancelled() }}
