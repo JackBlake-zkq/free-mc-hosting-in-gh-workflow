@@ -1,6 +1,6 @@
-# MC Server
+# Free MC Server Hosting in GH Workflow
 
-Run your Minecraft server IN A Github Workflow such that people can join it. This gives you 50h of free hosting per month, with unlimited customizability and 7GB of RAM (if you can figure out to get this to work on a Mac or Windows VM you could get 14GB of RAM).
+Run your Minecraft server IN A Github Workflow such that people can join it. This gives you 50h of free hosting per month, with unlimited customizability and 7GB of RAM. You could even get 14GB of RAM if you can get this working on a Mac or Windows GH Action Runner.
 
 This repo also has a system for automatic backups to AWS S3, which will probably be free depending on the size of your server folder, but could incur a few cents a month if you have a huge one. If you do a bit of your own customization, you could use your own system.
 
@@ -20,7 +20,7 @@ First, you'll need to do a few things in AWS:
 
 ### Step 2: Ngrok
 
-Next, [sign up for ngrok](https://dashboard.ngrok.com/signup) and save your authtoken for the next step.
+Next, [sign up for ngrok](https://dashboard.ngrok.com/signup) and save your auth token for the next step.
 
 ### Step 3: GitHub
 
@@ -29,7 +29,7 @@ Finally, configure the GitHub repository with your credentials and preferences b
 Secrets:
 - `AWS_ACCESS_KEY_ID` - from credentials you generated earlier
 - `AWS_SECRET_ACCESS_KEY` - from credentials you generated earlier
-- `NGROK_AUTHTOKEN` - 
+- `NGROK_AUTHTOKEN` - the auth token you saved earlier
 
 Variables:
 - `BACKUP_FREQUENCY` - how often to run backups to S3
