@@ -13,13 +13,13 @@ jobs:
           - name: setup env file
             run: echo ${{ secrets.DOTENV}} > .env
           - name: start mc server container
-            run: (cd easy-mcs && docker-compose up -d)
+            run: docker-compose up -d
           - name: wait until server starts, SERVER IP HERE
-            run: timeout 5m grep -m 1 "SERVER URL" <(docker logs -f mc)
+            run: timeout 5m grep -m 1 "SERVER URL" <(docker logs -f mcs)
           - name: stop server after 3h if running on schedule
             if: ${{ github.event_name == 'schedule' }}
-            run: (sleep 10800 && (echo "/stop" | docker attach mc)) &
+            run: (sleep 10800 && (echo "/stop" | docker attach mcs)) &
           - name: wait for server to be stopped
-            run: docker wait mc
+            run: docker wait mcs
           - if: ${{ cancelled() }}
-            run: echo "/stop" | docker attach mc
+            run: echo "/stop" | docker attach mcs
