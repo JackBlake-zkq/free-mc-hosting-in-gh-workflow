@@ -1,0 +1,15 @@
+version: '3'
+services:
+  mc-server:
+    image: ghcr.io/jackblake-zkq/easy-mcs:latest
+    build: .
+    volumes:
+    - ~/.aws/:/root/.aws:ro
+    - ./server:/server
+    env_file:
+      - .env
+    ports:
+    - "25565:25565"
+    stdin_open: true
+    tty: false
+    container_name: mcs

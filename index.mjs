@@ -1,9 +1,8 @@
 import { spawn } from 'child_process';
 import { writeS3, readS3 } from './s3.mjs';
-import { mkdirSync } from 'fs';
+import { connect } from "ngrok"
 
-
-const { BACKUP_FREQUENCY, START_COMMAND } = process.env;
+const { BACKUP_FREQUENCY, START_COMMAND, USE_BACKUP, NGROK_AUTHTOKEN } = process.env;
 
 const command = START_COMMAND.split(" ")
 
@@ -11,14 +10,9 @@ let finishDiskSave = () => {};
 
 let starting = true;
 
-try { 
-  process.chdir("./server") 
-} catch(err) {
-  mkdirSync("./server", {});
-  process.chdir("./server");
-}
+process.chdir("./server") 
 
-await readS3();
+if(USE_BACKUP) await readS3();
 
 const server_proc = spawn(command[0], command.slice(1));
 
@@ -29,7 +23,8 @@ server_proc.stdout.on('data', data => {
   console.log(str);
   if (str.includes("Done") && starting) {
     starting = false;
-    setInterval(writeBackup, parseInt(BACKUP_FREQUENCY));
+    startNgrok();
+    if(BACKUP_FREQUENCY) setInterval(writeBackup, parseInt(BACKUP_FREQUENCY));
   } else if (str.includes("Saved the game")) {
     finishDiskSave();
   }
@@ -44,7 +39,7 @@ server_proc.on('close', async code => {
   
   if(code == 0) {
     //must have saved to disk already, can write backup
-    await writeS3();
+    if(BACKUP_FREQUENCY) await writeS3();
   }
   process.exit(server_proc.exitCode);
 });
@@ -68,4 +63,22 @@ async function writeBackup() {
   await writeS3();
 
   server_proc.stdin.write('/say Backup Complete\n');
+}
+
+async function startNgrok() {
+  connect({
+    proto: 'tcp', // http|tcp|tls, defaults to http
+    addr: 25565, // port or network address, defaults to 80
+    authtoken: NGROK_AUTHTOKEN, // your authtoken from ngrok.com
+    region: 'us', // one of ngrok regions (us, eu, au, ap, sa, jp, in), defaults to us
+    onStatusChange: status => {
+      if(status === 'closed') {
+        server_proc.stdin.write('/stop\n');
+      }
+    }
+  }).then(url => {
+    console.log("------------------------------------------------------")
+    console.log("SERVER URL: " + url.slice(6))
+    console.log("------------------------------------------------------")
+  })
 }

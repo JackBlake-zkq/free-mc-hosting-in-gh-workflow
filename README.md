@@ -1,6 +1,8 @@
-# Free MC Server Hosting in GH Workflow
+# Easy MCS
 
-Run your Minecraft server IN A Github Workflow such that people can join it. This gives you 50h of free hosting per month, with unlimited customizability and 7GB of RAM. You could even get 14GB of RAM if you can get this working on a Mac or Windows GH Action Runner.
+Docs Coming Soon
+
+<!-- Run your Minecraft server IN A Github Workflow such that people can join it. This gives you 50h of free hosting per month, with unlimited customizability and 7GB of RAM. You could even get 14GB of RAM if you can get this working on a Mac or Windows GH Action Runner.
 
 This repo also has a system for automatic backups to AWS S3, which will probably be free depending on the size of your server folder, but could incur a few cents a month if you have a huge one. If you do a bit of your own customization, you could use your own system.
 
@@ -36,5 +38,5 @@ Variables:
 - `IMAGE_REPO` - path within ghcr.io to store your image at, something like `GH_USERNAME_LOWERCASE/IMAGE_NAME`. I'm doing `jackblake-zkq/mc-server`
 - `S3_BUCKET_NAME` - name of S3 bucket you created
 - `S3_REGION` - region of your S3 bucket
-- `START_COMMAND` - command to start your minecreaft server e.g. `java -Xmx4G -Xms2G -jar server.jar nogui`
+- `START_COMMAND` - command to start your minecreaft server e.g. `java -Xmx4G -Xms2G -jar server.jar nogui` -->
 
