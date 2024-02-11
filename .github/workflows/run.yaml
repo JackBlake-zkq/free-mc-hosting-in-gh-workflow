@@ -11,7 +11,7 @@ jobs:
         steps:
           - uses: actions/checkout@v2
           - name: setup env file
-            run: echo ${{ secrets.DOTENV}} > .env
+            run: echo "${{ secrets.DOTENV }}" > .env
           - name: start mc server container
             run: docker-compose up -d
           - name: wait until server starts, SERVER IP HERE
