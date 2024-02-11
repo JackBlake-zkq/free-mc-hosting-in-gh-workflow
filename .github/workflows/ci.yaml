@@ -20,6 +20,7 @@ jobs:
             registry: ghcr.io
             username: ${{ github.actor }}
             password: ${{ secrets.GITHUB_TOKEN }}
-  
-        - run: docker compose build
-        - run: docker push ghcr.io/jackblake-zkq/easy-mcs:latest
+        - run: |
+            touch .env
+            docker compose build
+            docker push ghcr.io/jackblake-zkq/easy-mcs:latest
