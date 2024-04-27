@@ -4,7 +4,6 @@ services:
     image: ghcr.io/jackblake-zkq/easy-mcs:latest
     build: .
     volumes:
-    - ~/.aws/:/root/.aws:ro
     - ./server:/server
     env_file:
       - .env
